@@ -3,12 +3,18 @@
 `define RESET_SEQUENCES_SV
 
 class base_reset_sequence extends uvm_sequence #(reset_transaction);
-  `uvm_object_utils(base_reset_sequence)
-  
+
   rand int reset_width = 10;
   rand int delay = 0;
   rand bit sync = 1;
   rand bit active_low = 1;
+
+  `uvm_object_utils_begin(base_reset_sequence)
+      `uvm_field_int (reset_width, UVM_ALL_ON)
+      `uvm_field_int (delay,       UVM_ALL_ON)
+      `uvm_field_int (sync,        UVM_ALL_ON)
+      `uvm_field_int (active_low,  UVM_ALL_ON)
+  `uvm_object_utils_end
   
   function new(string name = "base_reset_sequence");
     super.new(name);

@@ -10,6 +10,13 @@ class reset_driver extends uvm_driver #(reset_transaction);
   function new(string name, uvm_component parent);
     super.new(name, parent);
   endfunction
+
+  function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+
+      if (!uvm_config_db#(virtual reset_if)::get(this, "", "vif", vif))
+          `uvm_fatal("NOVIF", $sformatf("Cannot get interface"))
+  endfunction: build_phase
   
   virtual task run_phase(uvm_phase phase);
     forever begin
@@ -24,7 +31,11 @@ class reset_driver extends uvm_driver #(reset_transaction);
     repeat(tr.delay_before_reset) @(posedge vif.clock);
     
     // Align with clock if requested
-    if (tr.sync_to_clock) @(posedge vif.clock);
+    if (tr.sync_to_clock) begin
+        @(posedge vif.clock);
+    end else begin
+        #($urandom_range(1,3) * 1ps);
+    end
     
     // Assert reset
     vif.reset_n = tr.active_low ? 0 : 1;

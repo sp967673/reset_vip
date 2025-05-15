@@ -13,6 +13,13 @@ class reset_monitor extends uvm_monitor;
     super.new(name, parent);
     ap = new("ap", this);
   endfunction
+
+  function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+
+      if (!uvm_config_db#(virtual reset_if)::get(this, "", "vif", vif))
+          `uvm_fatal(get_type_name(), $sformatf("Cannot get vif in monitor!!!"))
+  endfunction: build_phase
   
   virtual task run_phase(uvm_phase phase);
     forever begin
