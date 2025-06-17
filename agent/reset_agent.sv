@@ -41,8 +41,6 @@ class reset_agent extends uvm_agent;
     end
   endfunction
   
-  // Virtual interface assignment
-  virtual reset_if vif;
 endclass
 
 `endif //RESET_AGENT_SV
